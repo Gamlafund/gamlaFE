@@ -9,6 +9,7 @@ import {
   Checkbox,
   FormControlLabel,
   Grid,
+  Box,
   TextField,
   IconButton,
   MenuItem,
@@ -27,11 +28,12 @@ import { LocalizationProvider } from "@mui/lab";
 import AdapterMoment from "@date-io/moment";
 import homeData from "../data/home";
 import moment from "moment";
+import Select from '@mui/material/Select';
 
 var items = ['Midnight Thing', 'Shadow of Struggle', 'Thunder Excuse', 'Circle of Nothing', 'Beach Daughters', 'Meaning of Diamonds', 'Extreme Riddle', 'Century Thing', 'Brave Connection', 'Axis', 'Carefree Nation'];
 var item = items[Math.floor(Math.random() * items.length)];
 
-let pledgeWallet ="";
+let pledgeWallet = "";
 const CreateFundModal = ({ open, onClose, data, onSubmit, actualWalletFunds }) => {
   const {
     register,
@@ -49,13 +51,20 @@ const CreateFundModal = ({ open, onClose, data, onSubmit, actualWalletFunds }) =
   const localSubmit = (data) => {
     if (!pledgingState) {
       alert("Please accept pledging of deposit collateral");
-    }else {
+    } else {
       onSubmit({
         ...data,
         duration: duration,
       });
     }
   };
+
+  const [currtype, setcurrtype] = React.useState('');
+
+  const handleChange = (event) => {
+    setcurrtype(event.target.value);
+  };
+
   return (
     <Dialog
       maxWidth="sm"
@@ -134,18 +143,37 @@ const CreateFundModal = ({ open, onClose, data, onSubmit, actualWalletFunds }) =
                   "The duration will be same as Number of participants ",
               }}
             /> */}
-
-            <InputDisplay
-              label="Recurring Amount"
-              control={control}
-              name="recurringAmount"
-              error={errors["recurringAmount"]}
-              required={true}
-              inputProps={{
-                type: "number",
-                min: 0,
-              }}
-            />
+            <Grid container py={1}>
+              <Grid item xs={6} px={2} >
+                <InputDisplay
+                  label="Recurring Amount"
+                  control={control}
+                  fullWidth
+                  name="recurringAmount"
+                  error={errors["recurringAmount"]}
+                  required={true}
+                  inputProps={{
+                    type: "number",
+                    min: 0,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <FormControl fullWidth size="small">
+                  <InputLabel id="">Currency Type</InputLabel>
+                  <Select
+                    value={currtype}
+                    label="Currency Type"
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={1}>USDT</MenuItem>
+                    <MenuItem value={2}>CHFD</MenuItem>
+                    <MenuItem value={3}>BUSD</MenuItem>
+                    <MenuItem value={4}>INRD</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
             <DateDisplay
               label="Start Date"
               control={control}
@@ -153,13 +181,29 @@ const CreateFundModal = ({ open, onClose, data, onSubmit, actualWalletFunds }) =
               error={errors["startDate"]}
               required={true}
             />
-            <SelectDisplay
-              label=" Pledging collateral"
-              control={control}
-              name="collateral"
-              error={errors["collateral"]}
-              required={true}
-            />
+            <Grid container py={1}>
+              <Grid item xs={6} pl={2} pr={1} py={1}>
+                <SelectDisplay
+                  label=" Pledging collateral"
+                  control={control}
+                  name="collateral"
+                  error={errors["collateral"]}
+                  required={true}
+                />
+              </Grid>
+
+              <Grid item xs={6}>
+                <InputDisplay
+                  label="Collateral value in fund currency"
+                  control={control}
+                  name="name"
+                  error={errors["name"]}
+                  required={true}
+                  inputProps={{ margin: "dense", border: "4px solid red" }}
+                  defaultValue={item}
+                />
+              </Grid>
+            </Grid>
             <Grid item lg={12} md={12} sm={12} xs={12}>
               <FormControlLabel
                 control={<Checkbox />}
@@ -211,8 +255,8 @@ const InputDisplay = ({
             {...field}
             margin="none"
             error={error}
-            helperText={error && error.message}
-            disabled = {isDisabled} //default: value false
+            helperText={error && error.messcurrtype}
+            disabled={isDisabled} //default: value false
             {...inputProps}
             inputProps={inputProps}
             onChange={(e) => {
@@ -231,7 +275,7 @@ const InputDisplay = ({
           ...(required && {
             required: {
               value: true,
-              message: `${label} is Required`,
+              messcurrtype: `${label} is Required`,
             },
           }),
           ...rules,
@@ -268,7 +312,7 @@ const SelectDisplay = ({
             {...field}
             margin="none"
             error={error}
-            helperText={error && error.message}
+            helperText={error && error.messcurrtype}
             {...inputProps}
             onChange={(e) => {
               const value = e.target.value;
@@ -292,7 +336,7 @@ const SelectDisplay = ({
           ...(required && {
             required: {
               value: true,
-              message: `${label} is Required`,
+              messcurrtype: `${label} is Required`,
             },
           }),
           ...rules,
@@ -337,9 +381,9 @@ const DateDisplay = ({
                     margin="none"
                     error={error}
                     fullWidth
-                    helperText={error && error.message}
+                    helperText={error && error.messcurrtype}
                     {...inputProps}
-                    // value={moment(params.value).format(DATEFORMAT)}
+                  // value={moment(params.value).format(DATEFORMAT)}
                   />
                 )}
               />
@@ -350,7 +394,7 @@ const DateDisplay = ({
             ...(required && {
               required: {
                 value: true,
-                message: `${label} is Required`,
+                messcurrtype: `${label} is Required`,
               },
             }),
             ...rules,
